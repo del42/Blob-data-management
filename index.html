@@ -1,0 +1,78 @@
+<html>
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+    <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+    <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
+    <script language="Javascript">
+        function Button2()
+        {
+            document.Form.action = "/delapp"
+            document.Form.submit();
+            return true;
+        }
+        </script>
+</head>
+    <body><div class="header">
+        <div class="signin">
+        You are
+        {% if user %}
+        <b>{{ user.nickname }}!</b>
+        [<a href="{{ logout }}"><b>sign out</b></a>]
+            </div>
+        <div class="upload">
+        <form action="{{upload_url}}" method="POST" enctype="multipart/form-data">
+        Upload BigData: <input type="file" name="delUpload"><br>
+        Enter DataType:
+                <input name="type" type="radio" checked="checked" value="image">image
+                <input name="type" type="radio" checked="checked" value="audio">audio
+                <input name="type" type="radio" checked="checked" value="video">video
+            <input type="submit" name="submit" value="Upload">
+        </form>
+        </div>
+        {% else %}
+        <b>James Bond 007</b>! If not,
+        [<a href="{{ login }}"><b>sign in</b></a>]
+        {% endif %}
+        </div>
+       
+        <hr>
+        {% for data in datas %}
+        {% ifequal user|stringformat:"s" data.email|stringformat:"s" %}
+            {% if data.type|stringformat:"s" == "image" %}
+            <a href="http://del-blobstore.appspot.com/download/{{data.image_key}}">
+            <img src="http://del-blobstore.appspot.com/download/{{data.image_key}}" align="middle" ></a>
+            
+            <input type="button" value="download image"  onclick="window.location = 'http://del-blobstore.appspot.com/download/{{data.image_key}}';">
+            <form class = "form" action="/delapp" method="post">
+                    <input type="text" name="key" value="{{data.image_key}}" style="display:none">
+                        <input type="submit" value="delete">
+                </form>
+            {% else%}{%if data.type|stringformat:"s" == "audio" %}
+                <a href="http://del-blobstore.appspot.com/download/{{data.image_key}}">
+                    <iframe src="http://del-blobstore.appspot.com/download/{{data.image_key}}" align="middle" ></iframe></a>
+                
+                <input type="button" value="download audio"  onclick="window.location = 'http://del-blobstore.appspot.com/download/{{data.image_key}}';">
+                    <form class = "form" action="/delapp" method="post">
+                        <input type="text" name="key" value="{{data.image_key}}" style="display:none">
+                            <input type="submit" value="delete">
+                                </form>
+            {% else %}
+                    <a href="http://del-blobstore.appspot.com/download/{{data.image_key}}">
+                        <iframe src="http://del-blobstore.appspot.com/download/{{data.image_key}}" align="middle" ></iframe></a>
+                    
+                    <input type="button" value="download video"  onclick="window.location = 'http://del-blobstore.appspot.com/download/{{data.image_key}}';">
+                        <form class = "form" action="/delapp" method="post">
+                            <input type="text" name="key" value="{{data.image_key}}" style="display:none">
+                                <input type="submit" value="delete">
+                                    </form>
+            {% endif %}         
+            {% endif %}
+        {% endifequal %}
+        {% endfor %}
+        
+       
+
+</body>
+</html>
